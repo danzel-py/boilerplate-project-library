@@ -56,7 +56,12 @@ module.exports = function(app, collection) {
         res.json(book)
       })
     })
+//HERER
 
+
+
+
+// SSSS
     .post(function(req, res) {
       let bookid = req.params.id;
       let comment = req.body.comment;
@@ -66,19 +71,23 @@ module.exports = function(app, collection) {
         {
           $push: { comments: comment },
           $inc: { commentcount: 1 }
-        }, (err, book) => {
+        },{
+          returnOriginal: false
+        } ,(err, book) => {
           if (err) return console.log(err)
-          if (!book) return res.send('no book exists')
-          res.json(book)
+          if (!book.value) return res.send('no book exists')
+          res.json(book.value)
+          
         })
     })
 
     .delete(function(req, res) {
       let bookid = req.params.id;
       //if successful response will be 'delete successful'
-      collection.deleteOne({ _id: ObjectID(bookid) }, (err, book) => {
+      collection.findOne({ _id: ObjectID(bookid) }, (err, book) => {
         if (err) return console.log(err)
         if (!book) return res.send('no book exists')
+       collection.deleteOne({ _id: ObjectID(bookid) })
         res.send('delete successful')
       })
     });
