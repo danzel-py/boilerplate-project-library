@@ -17,11 +17,6 @@ app.use(cors({origin: '*'})); //USED FOR FCC TESTING PURPOSES ONLY!
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-  //Index page (static HTML)
-  app.route('/')
-    .get(function (req, res) {
-      res.sendFile(process.cwd() + '/views/index.html');
-    });
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.DB
@@ -32,12 +27,11 @@ client.connect(err => {
 
   const collection = client.db("library").collection("books");
 
+  //Routing for API 
+  apiRoutes(app, collection);  
   
   //For FCC testing purposes
   fccTestingRoutes(app);
-  
-  //Routing for API 
-  apiRoutes(app, collection);  
       
   //404 Not Found Middleware
   app.use(function(req, res, next) {
@@ -47,6 +41,11 @@ client.connect(err => {
   });
 });
 
+  //Index page (static HTML)
+  app.route('/')
+    .get(function (req, res) {
+      res.sendFile(process.cwd() + '/views/index.html');
+    });
 
 //Start our server and tests!
 app.listen(process.env.PORT || 3000, function () {

@@ -27,6 +27,7 @@ module.exports = function(app, collection) {
       let title = req.body.title;
       if (!title) return res.send('missing required field title')
       collection.insertOne({
+        ... (req.body._id ? {_id: new ObjectID(req.body._id)}:{_id: new ObjectID()}),
         comments: [],
         title: title,
         commentcount: parseInt('0')
